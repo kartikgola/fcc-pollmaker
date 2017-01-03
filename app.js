@@ -6,7 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
-var users = require('./routes/users');
+var requestToken = require('./routes/requestToken');
+var accessToken = require('./routes/accessToken');
 
 var app = express();
 
@@ -21,9 +22,26 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(require('express-session')({
+  name : 'twitterSession',
+  secret : 'Gangadhar is shaktiman',
+  resave : false,
+  saveUninitialized : true,
+  cookie: { path: '/',
+    httpOnly: true,
+    secure: false,
+    maxAge: 9999999 
+  }
+}));
 
 app.use('/', index);
-app.use('/users', users);
+app.use('/requestToken', requestToken);
+app.use('/accessToken', accessToken);
+
+// Dummy page for testing only
+app.get('/dummy', function(req, res){
+   res.sendFile(path.join(__dirname + '/dummy.html'));
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

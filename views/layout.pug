@@ -24,6 +24,7 @@ html.no-js(lang='')
     link(rel='stylesheet', href='/css/bootstrap-theme.min.css')
     link(rel='stylesheet', href='/css/main.css')
     script(src='/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js')
+    script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
   body
     //if lt IE 8
       p.browserupgrade
@@ -41,21 +42,16 @@ html.no-js(lang='')
             span.icon-bar
             span.icon-bar
           |  
-          a.navbar-brand(href='#') Project name
+          a.navbar-brand(href='#') Poll Maker
         #navbar.navbar-collapse.collapse
-          form.navbar-form.navbar-right(role='form')
-            .form-group
-              input.form-control(type='text', placeholder='Email')
-            .form-group
-              input.form-control(type='password', placeholder='Password')
-            |  
-            button.btn.btn-success(type='submit') Sign in
+          form.navbar-form.navbar-right(role='form' method="get")  
+            a#twitterLogin.btn.btn-success() Login with twitter
     block content
 
     .container
       footer
         p &copy; Company 2015
-    script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
+    
     script.
       window.jQuery || document.write('<script src="/js/vendor/jquery-1.11.2.min.js"><\\/script>')
     script(src='/js/vendor/bootstrap.min.js')
