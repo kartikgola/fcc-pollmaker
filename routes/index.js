@@ -7,7 +7,6 @@ router.get('/', function(req, res, next) {
   if ( req.session.userDetails !== undefined )
     userName = req.session.userDetails.name;
   res.render('index', { userName : userName });
-  
 });
 
 module.exports = router;

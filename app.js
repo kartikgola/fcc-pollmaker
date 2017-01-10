@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var requestToken = require('./routes/requestToken');
 var accessToken = require('./routes/accessToken');
+var logout = require('./routes/logout');
 
 var app = express();
 
@@ -37,6 +38,7 @@ app.use(require('express-session')({
 app.use('/', index);
 app.use('/requestToken', requestToken);
 app.use('/accessToken', accessToken);
+app.use('/logout', logout);
 
 // Dummy page for testing only
 app.get('/dummy', function(req, res){
