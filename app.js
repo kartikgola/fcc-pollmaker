@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(require('express-session')({
-  name : 'twitterSession',
+  name : 'pMtwitter',
   secret : 'Gangadhar is shaktiman',
   resave : false,
   saveUninitialized : true,

@@ -44,18 +44,45 @@ html.no-js(lang='')
           |  
           a.navbar-brand(href='#') Poll Maker
         #navbar.navbar-collapse.collapse
-          form.navbar-form.navbar-right(role='form' method="get")  
-            a#twitterLogin.btn.btn-success() Login with twitter
+          form.navbar-form.navbar-right(role='form' method="get" id='navForm')  
     block content
 
     .container
       footer
         p &copy; Company 2015
-    
-    script.
-      window.jQuery || document.write('<script src="/js/vendor/jquery-1.11.2.min.js"><\\/script>')
     script(src='/js/vendor/bootstrap.min.js')
+    script.
+      var uName = '!{userName}';
+      (function () {
+          if (uName !== '') {
+          // add mypoll, createpoll, username
+          var form = document.getElementById('navForm');
+          var myPolls = document.createElement('a');
+          myPolls.textContent = 'MyPolls';
+          myPolls.setAttribute('class', 'btn btn-info');
+          var createPoll = document.createElement('a');
+          createPoll.textContent = 'Create Poll';
+          createPoll.setAttribute('class', 'btn btn-info');
+          var userName = document.createElement('a');
+          userName.textContent = uName;
+          userName.setAttribute('class', 'btn btn-info');
+
+          form.appendChild(myPolls);
+          form.appendChild(createPoll);
+          form.appendChild(userName);
+          }
+          else {
+          // add login button    
+          var form = document.getElementById('navForm');
+          var a = document.createElement('a');
+          a.setAttribute('class', 'btn btn-info');
+          a.setAttribute('id', 'twitterLogin');
+          a.textContent = 'Login with twitter';
+          form.appendChild(a);
+          }
+      })();
     script(src='/js/main.js')
+    
     script.
       (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
       function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;

@@ -30,11 +30,12 @@ router.get('/', function (req, res) {
                     //console.log(user);
                     req.session.userDetails.name = user.name;
                     req.session.userDetails.id = user.screen_name;
-                    res.render('success', {
-                        title: "Authorization successful",
-                        message: "Twitter auth. success. Closing window.",
-                        closeWindow: true
-                    });
+                    // res.render('success', {
+                    //     title: "Authorization successful",
+                    //     message: "Twitter auth. success. Closing window.",
+                    //     closeWindow: true
+                    // });
+                    res.render('success');
                 }
             });
         }

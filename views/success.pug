@@ -1,9 +1,9 @@
-doctype html
-
 html
     script.
-        if(#{closeWindow})
-            window.close();
-    body
-        h1=title
-        p=message
+        (function setCookie(cname, cvalue, exms) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exms*1000));
+            var expires = "expires="+ d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        })('reload', true, 2);
+        window.close();
