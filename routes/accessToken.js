@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
-var config = require('../config');
+
 
 router.get('/', function (req, res) {
     var twitterApi = require('node-twitter-api');
     var twitter = new twitterApi({
-        consumerKey: config.consumerKey,
-        consumerSecret: config.consumerSecret,
-        callback: config.callback
+        consumerKey: process.env.consumerKey,
+        consumerSecret: process.env.consumerSecret,
+        callback: process.env.callback
     });
 
     var reqToken = req.query.oauth_token,
