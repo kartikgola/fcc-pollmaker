@@ -1,0 +1,65 @@
+extends layout
+
+block content
+    .jumbotron
+        .container
+            h1.text-center Create a new poll
+    
+    .container
+        form#createPollForm.form-horizontal
+            .form-group
+                label.control-label.col-sm-2(for='title') Title
+                .col-sm-8
+                    input#title.form-control(type='text' placeholder='Enter title' required)
+            .form-group
+                label.control-label.col-sm-2(for='options') Options, separated by new lines(Min. 2, Max. 10) 
+                .col-sm-8
+                    textarea#options.form-control(rows='4' required)
+            .from-group
+                .col-sm-offset-2.col-sm-2
+                    button#btnSubmit.btn.btn-primary.form-control(type='submit') Create!
+   
+    
+    script.
+        $(document).ready(function(){
+
+            function isValid(){
+                if ($('#title').val().replace(/\s/g,'').length == 0 ){
+                    alert('Title cannot be made entirely of spaces');
+                    return false;
+                } else {
+                    var options = $('#options').val().toString().split('\n');
+                    options = options.filter(function(val){
+                        return val !== '';
+                    });
+                    if ( options.length < 2){
+                        alert('Minimum options should be 2. No whitespace.');
+                        return false;
+                    } else if ( options.length > 10 ){
+                        alert('Maximum options can be 10. No whitespace');
+                        return false;
+                    } else return true;
+                }
+            };
+
+            // Create Poll form handle
+            $('#createPollForm').on('submit', function(e){
+                e.preventDefault();
+                if (isValid()){
+                        $.ajax({
+                            url : '/processCreatePoll',
+                            data : {
+                                title : $('#title').val(),
+                                options : $('#options').val()
+                            }, success : function(res){
+                                if (res.success)
+                                    window.location.href = res.redirect;
+                                else 
+                                    alert('Something seems wrong. Try again later');
+                            }, error : function(xhr, status, err){
+                                alert('Some error occured');
+                            }
+                        });
+                }
+            });
+        });

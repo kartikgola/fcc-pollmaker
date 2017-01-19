@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var config = require('./config');
+var config = require('../config');
 
 router.get('/', function (req, res) {
     var twitterApi = require('node-twitter-api');
@@ -29,13 +29,13 @@ router.get('/', function (req, res) {
                     //res.send(user);
                     //console.log(user);
                     req.session.userDetails.name = user.name;
-                    req.session.userDetails.id = user.screen_name;
-                    // res.render('success', {
-                    //     title: "Authorization successful",
-                    //     message: "Twitter auth. success. Closing window.",
-                    //     closeWindow: true
-                    // });
-                    res.render('success');
+                    req.session.userDetails.userId = user.screen_name;
+                    
+                    // var app = require('../app');
+                    // app.locals.uD_name = user.name;
+                    // app.locals.uD_userId = user.screen_name;
+
+                    res.render('success', { userName : user.name , userId : user.screen_name});
                 }
             });
         }

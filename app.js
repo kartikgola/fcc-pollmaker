@@ -4,24 +4,29 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var config = require('./config');
 
+// Requiring routes JS files
 var index = require('./routes/index');
 var requestToken = require('./routes/requestToken');
 var accessToken = require('./routes/accessToken');
 var logout = require('./routes/logout');
+var createPoll = require('./routes/createPoll');
+var myPolls = require('./routes/myPolls');
+var polls = require('./routes/polls');
+var processCreatePoll = require('./routes/processCreatePoll');
+var processVote = require('./routes/processVote');
 
+// Express settings
 var app = express();
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser(config.cookieSecret));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(require('express-session')({
   name : 'pMtwitter',
@@ -35,15 +40,17 @@ app.use(require('express-session')({
   }
 }));
 
+// Attaching routes
 app.use('/', index);
 app.use('/requestToken', requestToken);
 app.use('/accessToken', accessToken);
 app.use('/logout', logout);
+app.use('/createPoll', createPoll);
+app.use('/myPolls', myPolls);
+app.use('/polls', polls);
+app.use('/processCreatePoll', processCreatePoll);
+app.use('/processVote', processVote);
 
-// Dummy page for testing only
-app.get('/dummy', function(req, res){
-   res.sendFile(path.join(__dirname + '/dummy.html'));
-});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

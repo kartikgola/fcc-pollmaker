@@ -1,0 +1,27 @@
+extends layout
+
+block content
+    .jumbotron
+        .container
+            h1.text-center All your polls 
+    .container
+        if count
+            br
+            .row
+                each item in pollData
+                    .col-sm-4
+                        .panel.panel-info.text-center
+                            .panel-heading
+                                a.panel-title(href='/polls/'+item.pId)
+                                    =item.title
+                            .panel-body
+                                dl.dl-horizontal 
+                                    dt Total votes :
+                                    dd=item.totalVotes
+                                    dt Created at :
+                                    dd=item.createdAt
+                            
+        else 
+            h2 You don't have any polls yet.
+                a(href='/createPoll') Create now ? 
+            h4        

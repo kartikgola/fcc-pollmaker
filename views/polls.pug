@@ -1,0 +1,79 @@
+extends layout
+
+block content
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.0/Chart.bundle.min.js')
+    .jumbotron
+        .container.text-center
+            h1 #{title}
+            h6 Created by - 
+                i #{createdBy}
+            h6 Created at - 
+                i #{createdAt}
+    .container
+        .row
+            .col-sm-5
+                h4 Select the option to vote for -
+                form#votePollForm.form-horizontal
+                    each item,index in options
+                        .form-group
+                            .col-sm-2
+                                input.form-control(required="required" type='radio' name='option' value=item id='option'+index)
+                            .col-sm-10
+                                label.control-label(for='option'+index)
+                                    =item
+                    .form-group
+                        button#btnVote.btn.btn-primary.form-control(type='submit') Vote!
+            .col-sm-7
+                canvas#myChart(style="width: 300px; height:300px")
+                 
+    script.
+        $(document).ready(function(){
+
+            $('#votePollForm').on('submit', function(e){
+                e.preventDefault();
+                $.ajax({
+                    url : '/processVote',
+                    data : {
+                        'pollId' : '!{pollId}',
+                        'vote' :  $('form input[type=radio]:checked').attr('id') 
+                    }, success : function(res){
+                        if ( res.success ){
+                            alert('Vote successful');
+                            location.reload();
+                        } else {
+                            alert('Vote failed. Only 1 vote per user or IP');
+                        }
+                    }, error : function(){
+                        alert('Some error occured');
+                }
+                });
+            });
+                        
+            // Creates poll chart
+            (function(){
+                    var pollOptions = !{JSON.stringify(options)};
+                    var pollVotes = !{JSON.stringify(votes)};
+                    var data = {
+                        labels : pollOptions,
+                        datasets : [{
+                            data : pollVotes,
+                            backgroundColor : ['#2EC65B', '#2BBCD1', '#C4CE02'
+                                 ,'#F6D5C9', '#038388', '#83C6AA'
+                                 ,'#A6A779', '#BF6B0B', '#F76284'
+                                 ,'#7E71FD'],
+                            hoverBackgroundColor : ['#2EC65B', '#2BBCD1', '#C4CE02'
+                                 ,'#F6D5C9', '#038388', '#83C6AA'
+                                 ,'#A6A779', '#BF6B0B', '#F76284'
+                                 ,'#7E71FD']
+                        }]
+                    };
+
+                var ctx = document.getElementById("myChart").getContext("2d");
+                var myChart = new Chart(ctx,{
+                    type : 'pie',
+                    data : data
+                });
+            })();
+
+        });
+
