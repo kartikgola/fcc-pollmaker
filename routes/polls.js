@@ -13,7 +13,7 @@ router.get('/:pollId', function (req, res, next) {
         userId = req.session.userDetails.userId;
     }
     // Hit up mongo to create poll data
-    mongoClient.connect('mongodb://127.0.0.1:27017/test', function (err, db) {
+    mongoClient.connect(process.env.MONGOLAB_URI, function (err, db) {
         assert.equal(null, err);
         // Connection successful
         var pollData = db.collection('pollData', function (err2, collection) {

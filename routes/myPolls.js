@@ -10,7 +10,7 @@ router.get('/', function (req, res, next) {
         var userName = req.session.userDetails.name;
         var userId = req.session.userDetails.userId;
 
-        mongoClient.connect('mongodb://127.0.0.1:27017/test', function (err, db) {
+        mongoClient.connect(process.env.MONGOLAB_URI, function (err, db) {
             assert.equal(null, err);
             // Connection successful
             var pollData = db.collection('pollData', function (err2, collection) {
