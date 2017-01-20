@@ -18,11 +18,9 @@ router.get('/:pollId', function (req, res, next) {
             assert.equal(null, err);
             // Connection successful
             var pollData = db.collection('pollData', function (err2, collection) {
+                assert.equal(null, err2);
                 collection.findOne({ _id: objectId(pollId) }, function (err3, doc) {
-                    if (err3) {
-                        console.error(err3);
-                        return;
-                    } else {
+                        assert.equal(null, err3);
                         if (doc == null) {
                             res.render('error', { error: { message: "This poll does not exist" } });
                             db.close();
@@ -41,7 +39,6 @@ router.get('/:pollId', function (req, res, next) {
                             });
                             db.close();
                         }
-                    }
                 }); // findOne
             });
         });
