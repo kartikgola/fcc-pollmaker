@@ -5,7 +5,9 @@ var ObjectId = require('mongodb').ObjectID;
 var assert = require('assert');
 
 router.get('/:pollId', function (req, res, next) {
-    var pollId = req.params.pollId;
+    var pollId = req.params.pollId.toString().trim();
+    console.log(pollId);
+    var dataId = new ObjectId(pollId);
     var userName = '';
     var userId = '';
     if (req.session.userDetails) {
@@ -19,7 +21,7 @@ router.get('/:pollId', function (req, res, next) {
             // Connection successful
             var pollData = db.collection('pollData', function (err2, collection) {
                 if ( err2 ) throw err2;
-                collection.findOne({ "_id": new ObjectId(pollId) }, function (err3, doc) {
+                collection.findOne({ "_id" : dataId}, function (err3, doc) {
                         if ( err3 ) throw err3;
                         if (doc == null) {
                             res.render('error', { error: { message: "This poll does not exist" } });
