@@ -17,14 +17,14 @@ router.get('/', function (req, res, next) {
   var data = [];
   try {
     mongoClient.connect(process.env.MONGOLAB_URI, function (err, db) {
-      assert.equal(null, err);
+      if ( err ) throw err;
       // Connection successful
       var pollData = db.collection('pollData', function (err2, collection) {
-        assert.equal(null, err2);
+        if ( err2 ) throw err;
         // Collection found
         var cursor = collection.find({}).sort({ 'createdAt': -1 });
         cursor.each(function (err3, item) {
-          assert.equal(null, err3);
+          if ( err3 ) throw err;
           if (item == null) {
             // cursor closed or exhausted
             res.render('index', { userName: userName, userId: userId, data: data });

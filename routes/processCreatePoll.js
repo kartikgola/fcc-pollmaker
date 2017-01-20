@@ -20,10 +20,10 @@ router.get('/', function (req, res, next) {
         try {
             // Hit up mongo to create poll data
             mongoClient.connect(process.env.MONGOLAB_URI, function (err, db) {
-                assert.equal(null, err);
+                if ( err ) throw err;
                 // Connection successful
                 var pollData = db.collection('pollData', function (err2, collection) {
-                    assert.equal(null, err2);
+                    if ( err2 ) throw err;
                     var dateNow = new Date().toLocaleDateString();
                     // Collection found
                     collection.insertOne({
@@ -33,7 +33,7 @@ router.get('/', function (req, res, next) {
                         createdBy: req.session.userDetails.userId,
                         createdAt: dateNow
                     }, function (err3, data) {
-                        assert.equal(null, err3);
+                        if ( err3 ) throw err;
                         // console.log(data.ops[0]._id); 
                         db.close();
                         res.send({ success: true, redirect: '/polls/' + data.ops[0]._id });

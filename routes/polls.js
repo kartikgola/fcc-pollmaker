@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mongoClient = require('mongodb').MongoClient;
-var objectId = require('mongodb').ObjectID;
+var ObjectId = require('mongodb').ObjectID;
 var assert = require('assert');
 
 router.get('/:pollId', function (req, res, next) {
@@ -15,12 +15,12 @@ router.get('/:pollId', function (req, res, next) {
     try {
         // Hit up mongo to create poll data
         mongoClient.connect(process.env.MONGOLAB_URI, function (err, db) {
-            assert.equal(null, err);
+            if ( err ) throw err;
             // Connection successful
             var pollData = db.collection('pollData', function (err2, collection) {
-                assert.equal(null, err2);
-                collection.findOne({ _id: objectId(pollId) }, function (err3, doc) {
-                        assert.equal(null, err3);
+                if ( err2 ) throw err;
+                collection.findOne({ "_id": new ObjectId(pollId) }, function (err3, doc) {
+                        if ( err3 ) throw err;
                         if (doc == null) {
                             res.render('error', { error: { message: "This poll does not exist" } });
                             db.close();

@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
-var objectId = require('mongodb').ObjectID;
+var ObjectId = require('mongodb').ObjectID;
 
 
 router.get('/', function (req, res, next) {
@@ -22,8 +22,9 @@ router.get('/', function (req, res, next) {
             assert.equal(null, err);
             // Connection successful
             var pollData_user = db.collection('pollData_user', function (err2, collection) {
+                if ( err2 ) throw err;
                 collection.findOne({ $or: [{ 'userIp': userIp }, { 'userId': userId }], 'pollId': pollId }, function (err3, doc) {
-                    assert.equal(null, err3);
+                    if ( err3 ) throw err;
                     if (doc == null) {
                         // vote does not exist
                         // Insert into pollData_user
@@ -42,7 +43,7 @@ router.get('/', function (req, res, next) {
                                         [voteString]: 1
                                     }
                                 };
-                                collection2.updateOne({ _id: objectId(pollId) }, update, function (err6, data) {
+                                collection2.updateOne({ "_id": new ObjectId(pollId) }, update, function (err6, data) {
                                     assert.equal(null, err6);
                                     res.send({ success: true, message: 'Vote successful' });
                                 });

@@ -12,10 +12,10 @@ router.get('/', function (req, res, next) {
 
         try {
             mongoClient.connect(process.env.MONGOLAB_URI, function (err, db) {
-                assert.equal(null, err);
+                if ( err ) throw err;
                 // Connection successful
                 var pollData = db.collection('pollData', function (err2, collection) {
-                    assert.equal(null, err2);
+                    if ( err2 ) throw err;
                     // Collection found
                     var cursor = collection.find({ createdBy: req.session.userDetails.userId }).sort({ 'createdAt': -1 });
                     cursor.count(function (err3, count) {
@@ -30,7 +30,7 @@ router.get('/', function (req, res, next) {
                         } else {
                             var data = [];
                             cursor.each(function (err3, item) {
-                                assert.equal(null, err3);
+                                if ( err3 ) throw err;
                                 if (item == null) {
                                     // cursor closed or exhausted
                                     res.render('myPolls', { userName: userName, userId: userId, pollData: data, count: data.length });
