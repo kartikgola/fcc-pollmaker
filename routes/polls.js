@@ -18,9 +18,9 @@ router.get('/:pollId', function (req, res, next) {
             if ( err ) throw err;
             // Connection successful
             var pollData = db.collection('pollData', function (err2, collection) {
-                if ( err2 ) throw err;
+                if ( err2 ) throw err2;
                 collection.findOne({ "_id": new ObjectId(pollId) }, function (err3, doc) {
-                        if ( err3 ) throw err;
+                        if ( err3 ) throw err3;
                         if (doc == null) {
                             res.render('error', { error: { message: "This poll does not exist" } });
                             db.close();
@@ -44,7 +44,7 @@ router.get('/:pollId', function (req, res, next) {
         });
     }
     catch (e) {
-        console.log(e);
+        console.error(e);
         res.render('snap', {
             userName: userName,
             userId: userId,

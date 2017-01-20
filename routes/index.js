@@ -20,11 +20,11 @@ router.get('/', function (req, res, next) {
       if ( err ) throw err;
       // Connection successful
       var pollData = db.collection('pollData', function (err2, collection) {
-        if ( err2 ) throw err;
+        if ( err2 ) throw err2;
         // Collection found
         var cursor = collection.find({}).sort({ 'createdAt': -1 });
         cursor.each(function (err3, item) {
-          if ( err3 ) throw err;
+          if ( err3 ) throw err3;
           if (item == null) {
             // cursor closed or exhausted
             res.render('index', { userName: userName, userId: userId, data: data });

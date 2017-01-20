@@ -19,12 +19,12 @@ router.get('/', function (req, res, next) {
         // Check if vote has already been made by that IP or user.
         // Using different collection for this called pollData_user
         mongoClient.connect(process.env.MONGOLAB_URI, function (err, db) {
-            assert.equal(null, err);
+        if ( err ) throw err;
             // Connection successful
             var pollData_user = db.collection('pollData_user', function (err2, collection) {
-                if ( err2 ) throw err;
+                if ( err2 ) throw err2;
                 collection.findOne({ $or: [{ 'userIp': userIp }, { 'userId': userId }], 'pollId': pollId }, function (err3, doc) {
-                    if ( err3 ) throw err;
+                    if ( err3 ) throw err3;
                     if (doc == null) {
                         // vote does not exist
                         // Insert into pollData_user
@@ -34,9 +34,10 @@ router.get('/', function (req, res, next) {
                             pollId: pollId,
                             vote: vote
                         }, function (err4, data) {
-                            assert.equal(null, err4);
+                            if ( err4 ) throw err4;
                             // Update vote count in pollData
                             var pollData = db.collection('pollData', function (err5, collection2) {
+                                if ( err5 ) throw err5;
                                 var voteString = "votes." + vote;
                                 var update = {
                                     $inc: {
@@ -44,7 +45,7 @@ router.get('/', function (req, res, next) {
                                     }
                                 };
                                 collection2.updateOne({ "_id": new ObjectId(pollId) }, update, function (err6, data) {
-                                    assert.equal(null, err6);
+                                    if ( err6 ) throw err6;
                                     res.send({ success: true, message: 'Vote successful' });
                                 });
                             });

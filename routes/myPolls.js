@@ -15,11 +15,11 @@ router.get('/', function (req, res, next) {
                 if ( err ) throw err;
                 // Connection successful
                 var pollData = db.collection('pollData', function (err2, collection) {
-                    if ( err2 ) throw err;
+                    if ( err2 ) throw err2;
                     // Collection found
                     var cursor = collection.find({ createdBy: req.session.userDetails.userId }).sort({ 'createdAt': -1 });
                     cursor.count(function (err3, count) {
-                        assert.equal(null, err3);
+                        if ( err3 ) throw err3;
                         if (count == 0) {
                             res.render('myPolls', {
                                 userName: userName,
@@ -29,8 +29,8 @@ router.get('/', function (req, res, next) {
                             });
                         } else {
                             var data = [];
-                            cursor.each(function (err3, item) {
-                                if ( err3 ) throw err;
+                            cursor.each(function (err4, item) {
+                                if ( err3 ) throw err4;
                                 if (item == null) {
                                     // cursor closed or exhausted
                                     res.render('myPolls', { userName: userName, userId: userId, pollData: data, count: data.length });

@@ -23,7 +23,7 @@ router.get('/', function (req, res, next) {
                 if ( err ) throw err;
                 // Connection successful
                 var pollData = db.collection('pollData', function (err2, collection) {
-                    if ( err2 ) throw err;
+                    if ( err2 ) throw err2;
                     var dateNow = new Date().toLocaleDateString();
                     // Collection found
                     collection.insertOne({
@@ -33,7 +33,7 @@ router.get('/', function (req, res, next) {
                         createdBy: req.session.userDetails.userId,
                         createdAt: dateNow
                     }, function (err3, data) {
-                        if ( err3 ) throw err;
+                        if ( err3 ) throw err3;
                         // console.log(data.ops[0]._id); 
                         db.close();
                         res.send({ success: true, redirect: '/polls/' + data.ops[0]._id });
