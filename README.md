@@ -3,7 +3,9 @@ Pollmaker project - Vote and create polls!
 
 Visit - https://pollmaker.herokuapp.com/
 
-View Engine : PugJS
-Web Framework : ExpressJS
-Server : NodeJS
-UI Framework : none
+Some specs : 
+<ul>
+<li> View Engine : PugJS </li> 
+<li> Web Framework : ExpressJS </li> 
+<li> Server : NodeJS </li> 
+<li> UI Framework : none</li> 
