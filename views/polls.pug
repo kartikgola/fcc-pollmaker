@@ -12,31 +12,69 @@ block content
     .container
         .row
             .col-sm-5
-                h4 Select the option to vote for -
+                .col-sm-offset-2.col-sm-8.text-center
+                    h4 Select your option -
                 form#votePollForm.form-horizontal
-                    each item,index in options
-                        .form-group
-                            .col-sm-2
-                                input.form-control(required="required" type='radio' name='option' value=item id='option'+index)
-                            .col-sm-10
-                                label.control-label(for='option'+index)
-                                    =item
+                    #firstFG.form-group
+                        .col-sm-offset-2.col-sm-8
+                            select#selectOptions.form-control()
+                                each item,index in options
+                                    option(id="option"+index value=item)
+                                        =item
+                                option(id='optionCustom' value='optionCustom') Enter your own
+                    br
                     .form-group
-                        button#btnVote.btn.btn-primary.form-control(type='submit') Vote!
+                        .col-sm-8.col-sm-offset-2
+                            button#btnVote.btn.btn-primary.form-control(type='submit') 
+                                |  Vote!
+                    if userName 
+                        .form-group
+                            .col-sm-8.col-sm-offset-2
+                                button#btnShare.btn.btn-info.form-control(type='button') 
+                                    | Share on twitter
+
             .col-sm-7
                 canvas#myChart(style="width: 300px; height:300px")
                  
     script.
         $(document).ready(function(){
 
+            // Handle custom option
+            (function(){
+                var div = $("<div id='customDiv' class='form-group'></div>");
+                var div2 = $("<div class='col-sm-offset-2 col-sm-8'></div>");
+                var input = $("<input type='text' id='inputCustomOption' placeholder='Enter your option' required class='form-control'></input>");
+                div2.append(input);
+                div.append(div2);
+                // optionCustom handler
+                $('#selectOptions').on('change', function(e){
+                    if( $('#selectOptions option:selected').attr('id') === 'optionCustom' ){
+                        $('#firstFG').after(div);
+                    } else {
+                        $('#customDiv').remove();
+                    }
+                });
+            })();
+            
+
+            // Handle user vote
             $('#votePollForm').on('submit', function(e){
                 e.preventDefault();
+
+                function genData(){
+                    var data = {};
+                    data.pollId = '!{pollId}';
+                    data.vote = $('#selectOptions option:selected').attr('id');
+                    if ( $('#selectOptions option:selected').attr('id') === 'optionCustom'){
+                        data.custom = true;
+                        data.customOption = $('#inputCustomOption').val();        
+                    } return data;
+                }
+                
                 $.ajax({
                     url : '/processVote',
-                    data : {
-                        'pollId' : '!{pollId}',
-                        'vote' :  $('form input[type=radio]:checked').attr('id') 
-                    }, success : function(res){
+                    data : genData(),
+                    ,success : function(res){
                         if ( res.success ){
                             alert('Vote successful');
                             location.reload();
@@ -48,6 +86,16 @@ block content
                 }
                 });
             });
+
+            // Handle share on twitter
+            if ('!{userName}')
+                $('#btnShare').on('click', function(e){
+                    var pollId = '!{pollId}';
+                    var twitterShare = window.open('https://twitter.com/intent/tweet?text=Check out this awesome poll at &url=' + encodeURI('https://pollmaker.herokuapp.com/polls/' + pollId), 
+                    'ShareWindow', 
+                    'width=470, height=500',
+                    false);  
+                });
                         
             // Creates poll chart
             (function(){

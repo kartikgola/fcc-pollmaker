@@ -6,7 +6,6 @@ var assert = require('assert');
 
 router.get('/:pollId', function (req, res, next) {
     var pollId = req.params.pollId.toString().trim();
-    console.log(pollId);
     var dataId = new ObjectId(pollId);
     var userName = '';
     var userId = '';
