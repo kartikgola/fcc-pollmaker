@@ -13,9 +13,7 @@ router.get('/', function (req, res, next) {
         userId = req.session.userDetails.userId;
     var pollId = req.query.pollId;
     var vote = req.query.vote.toString();
-    var customOption = req.query.customOption || '';
-    if (!req.query.custom)
-        vote = vote.substring(vote.length - 1, vote.length);
+    console.log(req.query);
 
     try {
         // Check if vote has already been made by that IP or user.
@@ -41,16 +39,19 @@ router.get('/', function (req, res, next) {
                             var pollData = db.collection('pollData', function (err5, collection2) {
                                 if (err5) throw err5;
                                 if (req.query.custom) { // If user selected custom option
-                                    collection2.updateOne({ "_id": new ObjectId(pollId) }, {$push : { options : customOption}} , function(err7, data){
-                                        if ( err7 ) throw err7;
-                                        collection2.updateOne({ "_id": new ObjectId(pollId) }, {$push : { votes : 1}}, function(err8, data){
-                                            if ( err8 ) throw err8;
-                                            res.send({success : true, message : 'Vote successful'});
-                                            db.close();
-                                        });
-                                    }); 
+                                    var voteStringCustom = "options." + vote;
+                                    var updateCustom = {
+                                        $set: {
+                                            [voteStringCustom]: 1
+                                        }
+                                    };
+                                    collection2.updateOne({ "_id": new ObjectId(pollId) }, updateCustom, function (err7, data) {
+                                        if (err7) throw err7;
+                                        res.send({ success: true, message: 'Vote successful' });
+                                        db.close();
+                                    });
                                 } else { // If user did not select custom option
-                                    var voteString = "votes." + vote;
+                                    var voteString = "options." + vote;
                                     var update = {
                                         $inc: {
                                             [voteString]: 1

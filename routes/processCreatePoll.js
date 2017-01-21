@@ -12,9 +12,9 @@ router.get('/', function (req, res, next) {
         options = options.filter(function (val) {
             return val !== ""
         });
-        var votes = [];
-        for (var i = 0; i < options.length; i++) {
-            votes.push(0);
+        var optionsData = {};
+        for ( var i in options ) {
+            optionsData[options[i]] = 0;
         }
 
         try {
@@ -28,8 +28,7 @@ router.get('/', function (req, res, next) {
                     // Collection found
                     collection.insertOne({
                         title: title,
-                        options: options,
-                        votes: votes,
+                        options: optionsData,
                         createdBy: req.session.userDetails.userId,
                         createdAt: dateNow
                     }, function (err3, data) {

@@ -11,7 +11,7 @@ router.get('/', function (req, res, next) {
   if (req.session.userDetails !== undefined) {
     userName = req.session.userDetails.name;
     userId = req.session.userDetails.userId;
-  }
+  } 
 
   // Hit up MongoDb for getting Poll data...
   var data = [];

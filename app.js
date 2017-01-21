@@ -15,6 +15,7 @@ var myPolls = require('./routes/myPolls');
 var polls = require('./routes/polls');
 var processCreatePoll = require('./routes/processCreatePoll');
 var processVote = require('./routes/processVote');
+var processDelete = require('./routes/processDelete');
 
 // Express settings
 var app = express();
@@ -49,6 +50,7 @@ app.use('/myPolls', myPolls);
 app.use('/polls', polls);
 app.use('/processCreatePoll', processCreatePoll);
 app.use('/processVote', processVote);
+app.use('/processDelete', processDelete);
 
 
 // catch 404 and forward to error handler

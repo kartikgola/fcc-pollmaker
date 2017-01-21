@@ -46,15 +46,14 @@ html.no-js(lang='')
         #navbar.navbar-collapse.collapse
           form#navForm.navbar-form.navbar-right(role='form' method="get")
             if userName !== '' && userName !== undefined
-              .dropdown
+              .dropdown.btn-group
+                a#myPolls.btn.btn-primary(href='/myPolls') My Polls
+                a#createPoll.btn.btn-primary(href='/createPoll') Create Poll
                 button#userName.btn.btn-success.dropdown-toggle(data-toggle='dropdown') #{userName}
-                  nbsp 
-                  span.caret
+                  i.caret
                 ul.dropdown-menu.push-right
                   li
-                    a#myPolls.dropdown-item(href='/myPolls') My Polls
-                    a#createPoll.dropdown-item(href='/createPoll') Create Poll
-                    a#twitterLogout.dropdown-item(href='/logout') Logout
+                      a#twitterLogout.dropdown-item(href='/logout') Logout
             else 
               button#twitterLogin.btn.btn-info() Login with Twitter
 

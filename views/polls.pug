@@ -18,10 +18,15 @@ block content
                     #firstFG.form-group
                         .col-sm-offset-2.col-sm-8
                             select#selectOptions.form-control()
-                                each item,index in options
-                                    option(id="option"+index value=item)
+                                //- INPUT DATA CHANGED
+                                //- NEED TO CHANGE THIS COMPLETELY
+                                - var optionsKeys = [];
+                                - for ( var i in options ){ optionsKeys.push(i); };
+                                each item in optionsKeys
+                                    option(value=item)
                                         =item
-                                option(id='optionCustom' value='optionCustom') Enter your own
+                                if optionsKeys.length <= 10
+                                    option(value='pollOptionCustom') Enter your own
                     br
                     .form-group
                         .col-sm-8.col-sm-offset-2
@@ -32,6 +37,11 @@ block content
                             .col-sm-8.col-sm-offset-2
                                 button#btnShare.btn.btn-info.form-control(type='button') 
                                     | Share on twitter
+                    if userId == createdBy    
+                        #deleteFG.form-group
+                            #deleteCol.col-sm-8.col-sm-offset-2
+                                button#btnDelete.btn.btn-danger.form-control(type='button' data-toggle="modal" data-target="#myModal")
+                                    | Delete this poll  
 
             .col-sm-7
                 canvas#myChart(style="width: 300px; height:300px")
@@ -39,7 +49,7 @@ block content
     script.
         $(document).ready(function(){
 
-            // Handle custom option
+            // Handle custom option UI
             (function(){
                 var div = $("<div id='customDiv' class='form-group'></div>");
                 var div2 = $("<div class='col-sm-offset-2 col-sm-8'></div>");
@@ -48,14 +58,59 @@ block content
                 div.append(div2);
                 // optionCustom handler
                 $('#selectOptions').on('change', function(e){
-                    if( $('#selectOptions option:selected').attr('id') === 'optionCustom' ){
+                    if( $('#selectOptions option:selected').attr('value') === 'pollOptionCustom' ){
                         $('#firstFG').after(div);
                     } else {
                         $('#customDiv').remove();
                     }
                 });
             })();
+
             
+            // Handle delete btn
+            (function(){
+                var row = $("<div class='row'></div>");
+                var div1 = $("<div class='col-sm-4'></div");
+                var div2 = $("<div class='col-sm-8 btn-group'></div>");
+                var sure = $("<h5> Sure ? </h5>");
+                var btn1 = $("<button id='delConfirmYes' class='btn btn-danger' type='button'> Yes </button>");
+                var btn2 = $("<button id='delConfirmNo' class='btn btn-warning' type='button'> No </button>");
+                div2.append(btn1);
+                div2.append(btn2);
+                div1.append(sure);
+                row.append(div1);
+                row.append(div2);
+
+                $('#btnDelete').on('click', function(e){
+                    $('#btnDelete').hide();
+                    $('#deleteCol').append(row);
+
+                    $('#delConfirmNo').click(function(e){
+                        row.remove();
+                        $('#btnDelete').show();
+                    });
+
+                    $('#delConfirmYes').click(function(e){
+                        // Handle the delete
+                        $.ajax({
+                            url : '/processDelete/' + '!{pollId}',
+                            type : 'delete',
+                            success : function(res){
+                                if(res.success){
+                                    alert(res.message);
+                                // redirect back to home
+                                window.location.href = '/myPolls';
+                                } else {
+                                    alert(res.error.message);
+                                }
+                            }, error : function() {
+                                alert('Some error occured');
+                            }
+                        })
+                    });
+                });
+            })();
+
 
             // Handle user vote
             $('#votePollForm').on('submit', function(e){
@@ -64,10 +119,10 @@ block content
                 function genData(){
                     var data = {};
                     data.pollId = '!{pollId}';
-                    data.vote = $('#selectOptions option:selected').attr('id');
-                    if ( $('#selectOptions option:selected').attr('id') === 'optionCustom'){
+                    data.vote = $('#selectOptions option:selected').attr('value');
+                    if ( $('#selectOptions option:selected').attr('value') === 'pollOptionCustom'){
                         data.custom = true;
-                        data.customOption = $('#inputCustomOption').val();        
+                        data.vote = $('#inputCustomOption').val();        
                     } return data;
                 }
                 
@@ -87,6 +142,7 @@ block content
                 });
             });
 
+
             // Handle share on twitter
             if ('!{userName}')
                 $('#btnShare').on('click', function(e){
@@ -97,10 +153,17 @@ block content
                     false);  
                 });
                         
+
             // Creates poll chart
             (function(){
-                    var pollOptions = !{JSON.stringify(options)};
-                    var pollVotes = !{JSON.stringify(votes)};
+                    var pollOptionsObject = !{JSON.stringify(options)};
+                    var pollOptions = [];
+                    var pollVotes = [];
+                    for ( var item in pollOptionsObject ){
+                        pollOptions.push(item);
+                        pollVotes.push(pollOptionsObject[item]);
+                    }
+
                     var data = {
                         labels : pollOptions,
                         datasets : [{

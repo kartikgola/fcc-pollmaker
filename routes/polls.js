@@ -32,7 +32,6 @@ router.get('/:pollId', function (req, res, next) {
                                 pollId: doc._id,
                                 title: doc.title,
                                 options: doc.options,
-                                votes: doc.votes,
                                 createdBy: doc.createdBy,
                                 createdAt: doc.createdAt,
                                 userName: userName,

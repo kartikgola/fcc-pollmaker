@@ -33,15 +33,25 @@ router.get('/', function (req, res, next) {
                                 if ( err3 ) throw err4;
                                 if (item == null) {
                                     // cursor closed or exhausted
-                                    res.render('myPolls', { userName: userName, userId: userId, pollData: data, count: data.length });
+                                    res.render('myPolls', { userName: userName,
+                                                            userId: userId,
+                                                            pollData: data,
+                                                            count: data.length 
+                                    });
                                     db.close();
                                 } else {
+                                    function genTotal(){
+                                        var total = 0;
+                                        for ( var i in item.options ){
+                                            total += parseInt(item.options[i]);
+                                        }
+                                        return total;
+                                    }
                                     data.push({
                                         'pId': item._id,
                                         'title': item.title,
                                         'createdAt': item.createdAt,
-                                        'votes': item.votes,
-                                        'totalVotes': item.votes.reduce(function (a, b) { return a + b; }, 0)
+                                        'totalVotes': genTotal() 
                                     });
                                 }
                             }); // each  
@@ -52,7 +62,7 @@ router.get('/', function (req, res, next) {
         }
 
         catch (e) {
-            console.log(e);
+            console.error(e);
             res.render('snap', {
                 userName: userName,
                 userId: userId,
